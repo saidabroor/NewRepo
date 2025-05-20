@@ -1,14 +1,51 @@
-# data_ingestion.py -  Datani yuklash uchun ishlatiladigan file.
-# data_transformation.py - datani tayyorlash, preprocessing va datani qayta ishlash uchun ochiladigan file.
+import os
+import sys
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from src.exception import CustomException
+from src.logging import logging
+from dataclasses import dataclass
 
-# model_trainer.py - model training uchun ishlatiladigan file.
+@dataclass
+class DataIngestionConfig:
+  train_data_path: str=os.path.join('artifacts', 'train.csv')
+  test_data_path: str=os.path.join('artifacts', 'test.csv')
+  raw_data_path: str=os.path.join('artifacts', 'data.csv')
 
-# Exception handling - dastur ishlashda xatolik yuzaga kelganda, tizimga xabar berish, xatolikni hal qilish va dastur ishini uzluksiz davom ettirish uchun kerakli choralarni ko'rish jarayoni. Maqsad kodni barqaror va ishonchli ishlashiga yordam berish.
+class DataIngestion:
+  def __init__(self):
+    self.ingestion_config = DataIngestionConfig()
 
-# Logging - tizimda yuz berayotgan jarayonlarni, katta-kichik o'zgarishlar, xatoliklar, muhim voqealarni qayd etib borish. Real-timeda oson tracking qilish imkoni va tahlil qilish imkoni bor.
+  def initiate_data(self):
+    logging.info('Enter dataset')
+    
+    try:
+      df = pd.read_csv(r'notebook\data\StudentsPerformance.csv')
+      logging.info('Dataset uploaded.')
+      os.makedirs(os.path.dirname(self.ingestion_config.train_data_path), exist_ok=True)
+      df.to_csv(self.ingestion_config.raw_data_path, index=False, header=True)
 
-# utils.py - filening ichida functionlar bo'ladi va bog'lovchi vazifasini o'taydi.
+      train_set, test_set = train_test_split(df, test_size=0.2, random_state=42)
+      train_set.to_csv(self.ingestion_config.train_data_path, index=False, header=True)
+      test_set.to_csv(self.ingestion_config.test_data_path, index=False, header=True)
+      logging.info('Dataset splitted.')
+
+
+      return(
+        self.ingestion_config.train_data_path,
+        self.ingestion_config.test_data_path
+      )
 
 
 
 
+    except Exception as e:
+      raise CustomException(e,sys)
+    
+if __name__ =='__main__':
+  obj = DataIngestion()
+  obj.initiate_data()
+
+      
+
+      
