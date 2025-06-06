@@ -9,7 +9,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from src.exception import CustomException
 from src.logging import logging
-from src.components.utils import save_object
+from src.utils import save_object
 
 @dataclass
 class DataTransformationConfig:
