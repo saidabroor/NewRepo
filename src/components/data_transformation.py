@@ -9,6 +9,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from src.exception import CustomException
 from src.logging import logging
+from src.components.utils import save_object
 
 @dataclass
 class DataTransformationConfig:
@@ -53,7 +54,7 @@ class DataTransformation:
 
 
       logging.info('Obtaining Data Preprocessing objects')
-      preprocessing_obj = self.get_data_transformation_obj
+      preprocessing_obj = self.get_data_transformation_obj()
       target_column_name = 'math_score'
       numerical_columns = ['reading_score', 'writing_score']
 
@@ -85,6 +86,6 @@ class DataTransformation:
 
       return train_arr, test_arr, self.data_transformation_config.preprocessor_obj_file_path  
   
-  except Exception as e:
-  raise CustomException(e,sys)
+    except Exception as e:
+      raise CustomException(e,sys)
       
