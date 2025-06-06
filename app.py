@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, method
 import pandas as pd
 import numpy as np
-
+from src.pipeline.train_pipeline import CustomData
 application = Flask(__name__)
 
 app = application
